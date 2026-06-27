@@ -1,0 +1,33 @@
+version: 0.1
+secrets:
+  never_commit:
+    - .secrets
+    - .env
+    - .env.local
+    - id_rsa
+    - id_ed25519
+  allow_examples:
+    - .secrets.example
+    - .env.example
+shell:
+  default_allowlist:
+    - git status
+    - git diff
+    - git log
+    - npm test
+    - npm run test
+    - npm run typecheck
+    - pnpm test
+    - pnpm typecheck
+    - yarn test
+    - yarn typecheck
+  require_approval_patterns:
+    - rm -rf
+    - sudo
+    - chmod -R
+    - chown -R
+    - curl * | sh
+    - wget * | sh
+    - deploy
+    - terraform apply
+    - kubectl apply
