@@ -1,0 +1,12 @@
+project_checks_pass:
+  description: Replace with project-specific checks.
+  command: "echo 'No project checks configured yet'"
+typescript_no_errors:
+  description: TypeScript project has no compile/type errors.
+  command: "npm run typecheck"
+targeted_tests_pass:
+  description: Tests related to the changed area pass.
+  command: "npm test -- --runInBand"
+full_test_suite_pass:
+  description: All tests pass.
+  command: "npm test"
