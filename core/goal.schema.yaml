@@ -1,0 +1,28 @@
+version: 0.1
+required_fields:
+  - id
+  - intent
+  - mode
+  - completion
+  - quality_gates
+example:
+  id: build-typescript-function
+  intent: Build a TypeScript function that does X.
+  mode: build
+  constraints:
+    allowed_paths: []
+    forbidden_paths: []
+  completion:
+    requires:
+      - user_intent_satisfied
+      - implementation_exists
+      - project_quality_gates_pass
+  quality_gates:
+    global:
+      - no_secret_leaks
+      - no_conflict_markers
+      - decision_log_updated
+    project:
+      - typescript_no_errors
+      - targeted_tests_pass
+      - full_test_suite_pass
