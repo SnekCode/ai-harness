@@ -21,4 +21,6 @@ else
   echo "Linked $OPENCODE_TARGET -> $OPENCODE_SOURCE"
 fi
 
+echo "Global harness entry point: $REPO_ROOT/AGENTS.md"
+echo "OpenCode adapter entry: $OPENCODE_SOURCE/AGENTS.md"
 echo "AI Harness install complete."
