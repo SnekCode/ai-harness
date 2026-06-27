@@ -1,20 +1,25 @@
 #!/usr/bin/env node
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
 const REQUIRED_GOAL_FIELDS = ["id", "intent", "mode", "completion", "quality_gates"];
-const DANGEROUS_PATTERNS = [
-  /rm\s+-rf/,
-  /\bsudo\b/,
-  /chmod\s+-R/,
-  /chown\s+-R/,
-  /curl\b.*\|\s*sh/,
-  /wget\b.*\|\s*sh/,
-  /\bdeploy\b/,
-  /terraform\s+apply/,
-  /kubectl\s+apply/
+const FALLBACK_DANGEROUS_PATTERNS = [
+  "rm -rf",
+  "sudo",
+  "chmod -R",
+  "chown -R",
+  "curl * | sh",
+  "wget * | sh",
+  "deploy",
+  "terraform apply",
+  "kubectl apply"
 ];
+
+function harnessRoot() {
+  return process.env.AI_HARNESS_HOME || path.join(os.homedir(), ".ai-harness");
+}
 
 function findProjectRoot(startDir = process.cwd()) {
   let current = path.resolve(startDir);
@@ -94,8 +99,55 @@ function stripQuotes(value) {
   return value.replace(/^['"]|['"]$/g, "");
 }
 
+function extractYamlList(content, key) {
+  const lines = content.split("\n");
+  const values = [];
+  let inList = false;
+  const keyIndent = (() => {
+    const line = lines.find((candidate) => candidate.trim() === `${key}:`);
+    return line ? line.search(/\S/) : -1;
+  })();
+
+  if (keyIndent === -1) return values;
+
+  for (const line of lines) {
+    if (line.trim() === `${key}:`) {
+      inList = true;
+      continue;
+    }
+
+    if (!inList) continue;
+
+    const indent = line.search(/\S/);
+    if (indent !== -1 && indent <= keyIndent && !line.trim().startsWith("-")) break;
+
+    const item = line.match(/^\s*-\s+(.+)\s*$/);
+    if (item) values.push(stripQuotes(item[1].trim()));
+  }
+
+  return values;
+}
+
+function globishToRegex(pattern) {
+  const escaped = pattern
+    .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*/g, ".*")
+    .replace(/\s+/g, "\\s+");
+  return new RegExp(escaped);
+}
+
+function loadDangerousPatterns() {
+  const safetyPath = path.join(harnessRoot(), "core", "safety.yaml");
+  if (!fs.existsSync(safetyPath)) return FALLBACK_DANGEROUS_PATTERNS.map(globishToRegex);
+
+  const safetyText = readText(safetyPath);
+  const configured = extractYamlList(safetyText, "require_approval_patterns");
+  const patterns = configured.length > 0 ? configured : FALLBACK_DANGEROUS_PATTERNS;
+  return patterns.map(globishToRegex);
+}
+
 function isDangerousCommand(command) {
-  return DANGEROUS_PATTERNS.some((pattern) => pattern.test(command));
+  return loadDangerousPatterns().some((pattern) => pattern.test(command));
 }
 
 function summarize(text, maxLength = 1600) {
