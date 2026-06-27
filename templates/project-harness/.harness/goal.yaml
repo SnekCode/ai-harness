@@ -1,0 +1,18 @@
+id: example-goal
+intent: Replace this with the project goal.
+mode: build
+constraints:
+  allowed_paths: []
+  forbidden_paths: []
+completion:
+  requires:
+    - user_intent_satisfied
+    - implementation_exists
+    - project_quality_gates_pass
+quality_gates:
+  global:
+    - no_secret_leaks
+    - no_conflict_markers
+    - decision_log_updated
+  project:
+    - project_checks_pass
