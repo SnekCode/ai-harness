@@ -1,0 +1,38 @@
+version: 0.1
+modes:
+  observe:
+    description: Read-only analysis, summaries, plans, and proposals.
+    can_edit: false
+    can_run_shell: false
+    can_commit: false
+    requires_goal_file: false
+  assist:
+    description: May edit files with user-directed intent. No shell by default.
+    can_edit: true
+    can_run_shell: false
+    can_commit: false
+    requires_goal_file: false
+  build:
+    description: May edit and run safe project checks. No commits by default.
+    can_edit: true
+    can_run_shell: true
+    can_commit: false
+    requires_goal_file: true
+  autonomous:
+    description: Work-until-goal mode with bounded cycles and quality gates.
+    can_edit: true
+    can_run_shell: true
+    can_commit: true
+    requires_goal_file: true
+    max_cycles: 5
+  eval:
+    description: Evaluation mode. Runs against test fixtures, not real project state.
+    can_edit: true
+    can_run_shell: true
+    can_commit: false
+    requires_goal_file: true
+non_negotiable:
+  - Never commit secrets.
+  - Never claim a goal is complete until completion gates pass.
+  - Never overwrite project-owned AGENTS.md, CLAUDE.md, .opencode, or .harness files without explicit approval.
+  - Prefer project policy over global default when project policy is stricter.
