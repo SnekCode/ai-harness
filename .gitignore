@@ -1,0 +1,26 @@
+# Secrets
+.secrets
+.secrets.*
+!.secrets.example
+.env
+.env.*
+!.env.example
+
+# Runtime state
+.harness/state.json
+.harness/run-logs/
+.harness/tmp/
+**/.harness/state.json
+**/.harness/run-logs/
+**/.harness/tmp/
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Node / tooling
+node_modules/
+dist/
+build/
+coverage/
