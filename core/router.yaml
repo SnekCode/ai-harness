@@ -25,19 +25,33 @@ routes:
     agent: planner
     model_profile: frontier_reasoning
     mode: observe
+    skills:
+      - skills/harness-improvement.md
   code_edit:
     agent: builder
     model_profile: local_coder
     mode: build
+    skills: []
   review:
     agent: reviewer
     model_profile: frontier_reviewer
     mode: observe
+    skills: []
   okf_update:
     agent: okf_curator
     model_profile: careful_writer
     mode: assist
+    skills:
+      - skills/okf-curation.md
+  harness_improvement:
+    agent: planner
+    model_profile: frontier_reasoning
+    mode: build
+    skills:
+      - skills/harness-improvement.md
+      - skills/okf-curation.md
   summary:
     agent: summarizer
     model_profile: local_summarizer
     mode: observe
+    skills: []
