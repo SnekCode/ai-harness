@@ -1,0 +1,43 @@
+version: 0.1
+model_profiles:
+  frontier_reasoning:
+    description: Strong reasoning model for planning, architecture, and difficult reviews.
+    provider: unset
+    model: unset
+  local_coder:
+    description: Local or low-cost coding model.
+    provider: unset
+    model: unset
+  frontier_reviewer:
+    description: Strong model for review, hallucination checks, and completion validation.
+    provider: unset
+    model: unset
+  careful_writer:
+    description: Careful model for OKF curation and durable memory writes.
+    provider: unset
+    model: unset
+  local_summarizer:
+    description: Local model for summaries, logs, and low-risk transformations.
+    provider: unset
+    model: unset
+routes:
+  planning:
+    agent: planner
+    model_profile: frontier_reasoning
+    mode: observe
+  code_edit:
+    agent: builder
+    model_profile: local_coder
+    mode: build
+  review:
+    agent: reviewer
+    model_profile: frontier_reviewer
+    mode: observe
+  okf_update:
+    agent: okf_curator
+    model_profile: careful_writer
+    mode: assist
+  summary:
+    agent: summarizer
+    model_profile: local_summarizer
+    mode: observe
