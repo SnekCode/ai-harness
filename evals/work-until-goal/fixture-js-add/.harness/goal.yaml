@@ -1,0 +1,21 @@
+id: implement-add-function
+intent: Implement the missing add(a, b) function so it returns the numeric sum of its two inputs.
+mode: build
+constraints:
+  allowed_paths:
+    - src/add.js
+    - tests/add.test.js
+  forbidden_paths: []
+completion:
+  requires:
+    - user_intent_satisfied
+    - implementation_exists
+    - project_quality_gates_pass
+quality_gates:
+  global:
+    - no_secret_leaks
+    - no_conflict_markers
+    - decision_log_updated
+  project:
+    - syntax_check_passes
+    - tests_pass
