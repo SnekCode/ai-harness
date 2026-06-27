@@ -1,0 +1,21 @@
+version: 0.1
+principle: The agent may propose completion, but only the verifier may close the goal.
+completion_contract:
+  subjective:
+    - user_intent_satisfied
+  objective:
+    - implementation_exists
+    - configured_quality_gates_pass
+    - no_policy_violations
+    - decision_log_updated
+verifier:
+  inputs:
+    - goal.yaml
+    - quality-gates.yaml
+    - state.json
+    - git_diff
+    - command_results
+  outputs:
+    - status: pass|fail|blocked
+    - evidence: []
+    - next_required_action: string
