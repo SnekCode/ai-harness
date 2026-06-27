@@ -1,0 +1,10 @@
+{
+  "name": "ai-harness-work-until-goal-eval",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "node --check src/add.js && node --check tests/add.test.js",
+    "test": "node --test tests/*.test.js"
+  }
+}
