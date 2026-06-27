@@ -1,0 +1,6 @@
+syntax_check_passes:
+  description: JavaScript files parse successfully.
+  command: "npm run typecheck"
+tests_pass:
+  description: Node test suite passes.
+  command: "npm test"
